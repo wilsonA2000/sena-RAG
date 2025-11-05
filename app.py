@@ -1,8 +1,11 @@
 """
-🤖 Asistente Virtual Normativo Inteligente - SENA
+Asistente Virtual Normativo Inteligente - SENA
 ==================================================
 Chatbot bibliotecario para consulta de documentación institucional en tiempo real.
-Desarrollado por: Wilson - Técnico de Cartera, SENA Regional Santander
+
+Desarrollado por: Wilson Andrés Arguello
+Técnico de Cartera - SENA Regional Santander
+Abogado 437.480 del C.S. de la Judicatura
 """
 
 import streamlit as st
@@ -18,485 +21,410 @@ load_dotenv()
 # Configuración de la página
 st.set_page_config(
     page_title="Asistente Virtual SENA",
-    page_icon="📚",
+    page_icon="🎓",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Estilos CSS personalizados con colores del SENA - Diseño Ultra Moderno
+# Estilos CSS - Diseño Institucional Profesional
 st.markdown("""
 <style>
-    /* ========== CONFIGURACIÓN GLOBAL ========== */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    /* ========== CONFIGURACIÓN GLOBAL - ESTILO CORPORATIVO ========== */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
     * {
-        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     }
 
     .main {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        animation: gradientShift 15s ease infinite;
+        background-color: #F5F7FA;
+        padding: 2rem 1rem;
     }
 
-    @keyframes gradientShift {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-    }
-
-    /* Ocultar elementos de Streamlit por defecto */
+    /* Ocultar elementos de Streamlit */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
 
-    /* ========== HEADER PRINCIPAL CON LOGO ========== */
+    /* ========== HEADER INSTITUCIONAL ========== */
     .sena-header {
-        background: linear-gradient(135deg, #39A900 0%, #2d8500 50%, #1f6600 100%);
-        padding: 2.5rem 2rem;
-        border-radius: 20px;
-        margin-bottom: 2rem;
-        color: white;
-        text-align: center;
-        box-shadow: 0 10px 40px rgba(57, 169, 0, 0.3),
-                    0 0 0 1px rgba(255,255,255,0.1) inset;
-        position: relative;
-        overflow: hidden;
-        animation: fadeInDown 0.8s ease-out;
-    }
-
-    .sena-header::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        right: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-        animation: rotate 20s linear infinite;
-    }
-
-    @keyframes rotate {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-
-    .sena-header h1 {
-        margin: 0;
-        font-size: 2.5rem;
-        font-weight: 700;
-        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        position: relative;
-        z-index: 1;
-        letter-spacing: -0.5px;
-    }
-
-    .sena-header p {
-        margin: 0.5rem 0 0 0;
-        font-size: 1.1rem;
-        opacity: 0.95;
-        font-weight: 400;
-        position: relative;
-        z-index: 1;
+        background: #FFFFFF;
+        border-bottom: 3px solid #39A900;
+        padding: 2rem 3rem;
+        margin-bottom: 3rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
 
     .logo-container {
         display: flex;
         align-items: center;
-        justify-content: center;
         gap: 1.5rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
     }
 
     .logo-container img {
-        height: 80px;
-        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
-        animation: logoFloat 3s ease-in-out infinite;
+        height: 60px;
     }
 
-    @keyframes logoFloat {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
+    .sena-header h1 {
+        margin: 0;
+        font-size: 1.875rem;
+        font-weight: 600;
+        color: #1F2937;
+        letter-spacing: -0.025em;
     }
 
-    @keyframes fadeInDown {
-        from {
-            opacity: 0;
-            transform: translateY(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .sena-header p {
+        margin: 0.5rem 0 0 0;
+        font-size: 0.9375rem;
+        color: #6B7280;
+        font-weight: 400;
     }
 
-    /* ========== LOGIN MODERNO ========== */
+    /* ========== CONTENEDOR DE LOGIN ========== */
     .login-container {
-        background: white;
-        border-radius: 24px;
+        background: #FFFFFF;
+        border: 1px solid #E5E7EB;
+        border-radius: 8px;
         padding: 3rem 2.5rem;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.08),
-                    0 0 0 1px rgba(0,0,0,0.02);
-        animation: fadeInUp 0.6s ease-out;
-        position: relative;
-        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        max-width: 480px;
+        margin: 0 auto;
     }
 
-    .login-container::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 6px;
-        background: linear-gradient(90deg, #39A900, #FF6600);
-        border-radius: 24px 24px 0 0;
-    }
-
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .login-header {
+        border-bottom: 1px solid #E5E7EB;
+        padding-bottom: 1.5rem;
+        margin-bottom: 2rem;
     }
 
     .login-title {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         font-weight: 600;
-        color: #2d8500;
+        color: #1F2937;
         margin-bottom: 0.5rem;
-        text-align: center;
     }
 
     .login-subtitle {
-        color: #6c757d;
-        text-align: center;
-        margin-bottom: 2rem;
-        font-size: 0.95rem;
+        color: #6B7280;
+        font-size: 0.875rem;
+        font-weight: 400;
     }
 
-    /* Mejorar inputs de Streamlit */
+    .demo-badge {
+        display: inline-block;
+        padding: 0.375rem 0.75rem;
+        background-color: #FEF3C7;
+        border: 1px solid #FDE68A;
+        color: #92400E;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+    }
+
+    /* ========== INPUTS PROFESIONALES ========== */
     .stTextInput > div > div > input,
     .stSelectbox > div > div > select {
-        border: 2px solid #e9ecef;
-        border-radius: 12px;
-        padding: 0.75rem 1rem;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        background: white;
+        border: 1px solid #D1D5DB;
+        border-radius: 6px;
+        padding: 0.625rem 0.875rem;
+        font-size: 0.9375rem;
+        transition: all 0.15s ease;
+        background: #FFFFFF;
+        color: #1F2937;
     }
 
     .stTextInput > div > div > input:focus,
     .stSelectbox > div > div > select:focus {
         border-color: #39A900;
-        box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.1);
+        box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.08);
+        outline: none;
     }
 
-    /* Botones mejorados */
+    .stTextInput label,
+    .stSelectbox label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    /* ========== BOTONES CORPORATIVOS ========== */
     .stButton > button {
-        border-radius: 12px;
-        padding: 0.75rem 2rem;
-        font-weight: 600;
-        font-size: 1rem;
+        border-radius: 6px;
+        padding: 0.625rem 1.25rem;
+        font-weight: 500;
+        font-size: 0.9375rem;
         border: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(57, 169, 0, 0.2);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        transition: all 0.15s ease;
+        background-color: #39A900;
+        color: white;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
 
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(57, 169, 0, 0.3);
+        background-color: #2d8500;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12);
     }
 
     .stButton > button:active {
-        transform: translateY(0px);
+        background-color: #1f6600;
     }
 
-    /* ========== MENSAJES DE CHAT MODERNOS ========== */
+    /* ========== MENSAJES DE CHAT ESTILO ENTERPRISE ========== */
     .chat-message {
-        padding: 1.5rem;
-        border-radius: 18px;
-        margin-bottom: 1.2rem;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-        animation: messageSlideIn 0.4s ease-out;
-        position: relative;
-        backdrop-filter: blur(10px);
-    }
-
-    @keyframes messageSlideIn {
-        from {
-            opacity: 0;
-            transform: translateX(-20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        padding: 1.25rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        border: 1px solid #E5E7EB;
+        background: #FFFFFF;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     }
 
     .chat-message.user {
-        background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 100%);
-        border-left: 5px solid #FF6600;
-        margin-left: 10%;
-        border-radius: 18px 18px 4px 18px;
+        background: #F9FAFB;
+        border-left: 3px solid #FF6600;
     }
 
     .chat-message.assistant {
-        background: linear-gradient(135deg, #ffffff 0%, #f8fff5 100%);
-        border-left: 5px solid #39A900;
-        margin-right: 10%;
-        border-radius: 18px 18px 18px 4px;
+        background: #FFFFFF;
+        border-left: 3px solid #39A900;
     }
 
-    .chat-message strong {
+    .chat-message-header {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 0.9rem;
-        font-weight: 600;
+        gap: 0.75rem;
         margin-bottom: 0.75rem;
-        color: #495057;
-    }
-
-    .chat-message.user strong {
-        color: #FF6600;
-        justify-content: flex-end;
-    }
-
-    .chat-message.assistant strong {
-        color: #39A900;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #F3F4F6;
     }
 
     .chat-avatar {
-        display: inline-flex;
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
+        display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.2rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: white;
+        flex-shrink: 0;
     }
 
     .chat-avatar.user {
-        background: linear-gradient(135deg, #FF6600, #ff8533);
+        background-color: #FF6600;
     }
 
     .chat-avatar.assistant {
-        background: linear-gradient(135deg, #39A900, #4dd419);
+        background-color: #39A900;
     }
 
-    /* Mensaje de bienvenida especial */
+    .chat-message-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .chat-message-time {
+        font-size: 0.75rem;
+        color: #9CA3AF;
+        margin-left: auto;
+    }
+
+    .chat-message-content {
+        line-height: 1.6;
+        color: #1F2937;
+        font-size: 0.9375rem;
+    }
+
+    /* ========== MENSAJE DE BIENVENIDA ========== */
     .welcome-message {
-        background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
-        border: 2px solid #e3f2fd;
-        border-radius: 20px;
+        background: #FFFFFF;
+        border: 1px solid #E5E7EB;
+        border-radius: 8px;
         padding: 2rem;
         margin-bottom: 2rem;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.06);
-        animation: fadeInScale 0.6s ease-out;
-    }
-
-    @keyframes fadeInScale {
-        from {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
 
     .welcome-message h3 {
-        color: #2d8500;
-        font-size: 1.5rem;
+        color: #1F2937;
+        font-size: 1.25rem;
         margin-bottom: 1rem;
         font-weight: 600;
+    }
+
+    .welcome-message p {
+        color: #6B7280;
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
     }
 
     .welcome-message ul {
         list-style: none;
         padding: 0;
-        margin: 1.5rem 0;
+        margin: 0;
     }
 
     .welcome-message li {
         padding: 0.75rem 0;
-        color: #495057;
-        font-size: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        transition: transform 0.2s ease;
+        color: #374151;
+        font-size: 0.9375rem;
+        border-bottom: 1px solid #F3F4F6;
     }
 
-    .welcome-message li:hover {
-        transform: translateX(5px);
+    .welcome-message li:last-child {
+        border-bottom: none;
     }
 
-    /* ========== SIDEBAR MEJORADO ========== */
+    .welcome-message li strong {
+        color: #1F2937;
+        font-weight: 600;
+    }
+
+    .info-box {
+        background: #EFF6FF;
+        border: 1px solid #DBEAFE;
+        border-radius: 6px;
+        padding: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .info-box-title {
+        font-weight: 600;
+        color: #1E40AF;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .info-box-content {
+        color: #1E3A8A;
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+
+    /* ========== SIDEBAR PROFESIONAL ========== */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
-        border-right: 1px solid rgba(0,0,0,0.05);
+        background: #FFFFFF;
+        border-right: 1px solid #E5E7EB;
     }
 
     section[data-testid="stSidebar"] > div {
-        padding-top: 2rem;
+        padding: 1.5rem 1rem;
     }
 
-    .sidebar-stat {
-        background: linear-gradient(135deg, #f8fff5 0%, #e8f5e3 100%);
-        border-radius: 12px;
-        padding: 1rem;
-        margin: 0.5rem 0;
-        border-left: 4px solid #39A900;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    .sidebar-section {
+        background: #F9FAFB;
+        border: 1px solid #E5E7EB;
+        border-radius: 6px;
+        padding: 1.25rem;
+        margin-bottom: 1.25rem;
     }
 
-    /* ========== INPUT DE CHAT MEJORADO ========== */
+    .sidebar-section-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #6B7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.75rem;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1F2937;
+        line-height: 1;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.8125rem;
+        color: #6B7280;
+        font-weight: 400;
+    }
+
+    .stat-divider {
+        height: 1px;
+        background: #E5E7EB;
+        margin: 1rem 0;
+    }
+
+    /* ========== INPUT DE CHAT ========== */
     .stChatInput {
-        border-radius: 16px;
-        border: 2px solid #e9ecef;
-        transition: all 0.3s ease;
+        border: 1px solid #D1D5DB;
+        border-radius: 6px;
+        transition: all 0.15s ease;
     }
 
     .stChatInput:focus-within {
         border-color: #39A900;
-        box-shadow: 0 4px 16px rgba(57, 169, 0, 0.15);
+        box-shadow: 0 0 0 3px rgba(57, 169, 0, 0.08);
     }
 
-    /* ========== SPINNER PERSONALIZADO ========== */
-    .stSpinner > div {
-        border-top-color: #39A900 !important;
-    }
-
-    /* ========== INFO/WARNING/ERROR MEJORADOS ========== */
+    /* ========== ALERTS ========== */
     .stAlert {
-        border-radius: 12px;
-        border: none;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-        animation: fadeIn 0.3s ease;
+        border-radius: 6px;
+        border: 1px solid;
+        padding: 1rem;
+        font-size: 0.875rem;
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+    /* ========== SCROLLBAR ========== */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
     }
 
-    /* ========== EFECTOS HOVER PROFESIONALES ========== */
-    .hover-lift {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    ::-webkit-scrollbar-track {
+        background: #F3F4F6;
     }
 
-    .hover-lift:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    ::-webkit-scrollbar-thumb {
+        background: #D1D5DB;
+        border-radius: 4px;
     }
 
-    /* ========== RESPONSIVE DESIGN ========== */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #9CA3AF;
+    }
+
+    /* ========== UTILIDADES ========== */
+    .text-muted {
+        color: #6B7280;
+        font-size: 0.875rem;
+    }
+
+    .divider {
+        height: 1px;
+        background: #E5E7EB;
+        margin: 1.5rem 0;
+    }
+
+    /* ========== RESPONSIVE ========== */
     @media (max-width: 768px) {
-        .sena-header h1 {
-            font-size: 1.75rem;
+        .sena-header {
+            padding: 1.5rem 1.5rem;
         }
 
-        .sena-header p {
-            font-size: 0.95rem;
+        .sena-header h1 {
+            font-size: 1.5rem;
         }
 
         .logo-container img {
-            height: 60px;
-        }
-
-        .chat-message.user {
-            margin-left: 0;
-        }
-
-        .chat-message.assistant {
-            margin-right: 0;
+            height: 48px;
         }
 
         .login-container {
             padding: 2rem 1.5rem;
         }
-    }
 
-    /* ========== ANIMACIONES DE CARGA ========== */
-    .loading-dots {
-        display: inline-flex;
-        gap: 0.25rem;
-    }
-
-    .loading-dots span {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #39A900;
-        animation: loadingDots 1.4s infinite ease-in-out;
-    }
-
-    .loading-dots span:nth-child(1) {
-        animation-delay: -0.32s;
-    }
-
-    .loading-dots span:nth-child(2) {
-        animation-delay: -0.16s;
-    }
-
-    @keyframes loadingDots {
-        0%, 80%, 100% {
-            transform: scale(0);
-            opacity: 0.5;
+        .welcome-message {
+            padding: 1.5rem;
         }
-        40% {
-            transform: scale(1);
-            opacity: 1;
-        }
-    }
-
-    /* ========== BADGE/PILLS ========== */
-    .badge {
-        display: inline-block;
-        padding: 0.35rem 0.75rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 500;
-        background: linear-gradient(135deg, #39A900, #4dd419);
-        color: white;
-        box-shadow: 0 2px 8px rgba(57, 169, 0, 0.2);
-    }
-
-    .badge-orange {
-        background: linear-gradient(135deg, #FF6600, #ff8533);
-    }
-
-    /* ========== SCROLL SUAVE ========== */
-    html {
-        scroll-behavior: smooth;
-    }
-
-    /* ========== SCROLLBAR PERSONALIZADO ========== */
-    ::-webkit-scrollbar {
-        width: 10px;
-        height: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #39A900, #2d8500);
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: linear-gradient(180deg, #2d8500, #1f6600);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -557,7 +485,7 @@ Proporciona respuestas precisas, estructuradas y útiles."""
         # Construir historial de mensajes
         messages = [{"role": "system", "content": system_prompt}]
 
-        for msg in st.session_state.messages[:-1]:  # Excluir el último mensaje del usuario que ya tenemos
+        for msg in st.session_state.messages[:-1]:
             messages.append({
                 "role": msg["role"],
                 "content": msg["content"]
@@ -570,7 +498,7 @@ Proporciona respuestas precisas, estructuradas y útiles."""
 
         # Llamar a Groq API
         response = st.session_state.groq_client.chat.completions.create(
-            model="llama-3.3-70b-versatile",  # Modelo más reciente y potente
+            model="llama-3.3-70b-versatile",
             messages=messages,
             max_tokens=2048,
             temperature=0.7,
@@ -579,10 +507,10 @@ Proporciona respuestas precisas, estructuradas y útiles."""
         return response.choices[0].message.content
 
     except Exception as e:
-        return f"⚠️ Error al conectar con el asistente: {str(e)}\n\nPor favor verifica tu configuración de API key en el archivo .env"
+        return f"Error al conectar con el asistente: {str(e)}\n\nPor favor verifica tu configuración de API key."
 
 def render_header(title, subtitle, show_logo=True):
-    """Renderiza el header moderno con logo opcional"""
+    """Renderiza el header profesional con logo opcional"""
     import os
 
     # Usar ruta relativa para compatibilidad con Streamlit Cloud
@@ -595,13 +523,15 @@ def render_header(title, subtitle, show_logo=True):
         <div class="sena-header">
             <div class="logo-container">
                 <img src="data:image/png;base64,{get_base64_image(logo_path)}" alt="Logo SENA">
+                <div>
+                    <h1>{title}</h1>
+                    <p>{subtitle}</p>
+                </div>
             </div>
-            <h1>{title}</h1>
-            <p>{subtitle}</p>
         </div>
         """, unsafe_allow_html=True)
     else:
-        # Header sin logo (fallback)
+        # Header sin logo
         st.markdown(f"""
         <div class="sena-header">
             <h1>{title}</h1>
@@ -623,46 +553,43 @@ def main():
     init_session_state()
 
     if not st.session_state.authenticated:
-        # Página de login moderna
-        render_header("🎓 SENA - Asistente Virtual Normativo", "Sistema de Consulta Documental Inteligente", show_logo=True)
+        # Página de login profesional
+        render_header("🎓 Asistente Virtual Normativo SENA", "Sistema de Consulta Documental Inteligente", show_logo=True)
 
         # Espaciado
         st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
 
-        col1, col2, col3 = st.columns([1, 2.5, 1])
+        col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
             st.markdown("""
             <div class="login-container">
-                <div class="login-title">🔐 Autenticación Institucional</div>
-                <div class="login-subtitle">Ingresa con tus credenciales del SENA</div>
+                <div class="login-header">
+                    <div class="login-title">🔐 Autenticación Institucional</div>
+                    <div class="login-subtitle">Ingresa con tus credenciales del SENA</div>
+                </div>
+                <div style="text-align: center;">
+                    <div class="demo-badge">MODO DEMO - Usa cualquier credencial para probar</div>
+                </div>
             </div>
             """, unsafe_allow_html=True)
 
-            # Espaciado
             st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
-            # Mostrar badge de demo
-            st.markdown("""
-            <div style='text-align: center; margin-bottom: 1.5rem;'>
-                <span class="badge-orange badge">MODO DEMO - Usa cualquier credencial</span>
-            </div>
-            """, unsafe_allow_html=True)
-
-            usuario = st.text_input("👤 Usuario", placeholder="wilson.perez", key="login_user")
-            password = st.text_input("🔑 Contraseña", type="password", placeholder="••••••••", key="login_pass")
+            usuario = st.text_input("👤 Usuario", placeholder="wilson.perez", key="login_user", label_visibility="visible")
+            password = st.text_input("🔑 Contraseña", type="password", placeholder="••••••••", key="login_pass", label_visibility="visible")
             perfil = st.selectbox(
                 "👔 Perfil",
                 ["Técnico de Cartera", "Coordinador Académico", "Instructor", "Subdirector", "Administrativo"],
-                key="login_profile"
+                key="login_profile",
+                label_visibility="visible"
             )
 
-            st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
+            st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
 
-            if st.button("🚀 INGRESAR AL SISTEMA", type="primary", use_container_width=True):
+            if st.button("🚀 Ingresar al Sistema", type="primary", use_container_width=True):
                 if usuario and password:
-                    # Animación de carga
                     with st.spinner('Autenticando...'):
-                        time.sleep(0.8)  # Simular autenticación
+                        time.sleep(0.8)
 
                     st.session_state.authenticated = True
                     st.session_state.user_profile = {
@@ -670,20 +597,22 @@ def main():
                         'perfil': perfil,
                         'area': 'Gestión Financiera' if perfil == "Técnico de Cartera" else 'Académica'
                     }
-                    st.success("✅ Autenticación exitosa. Redirigiendo...")
+                    st.success("Autenticación exitosa")
                     time.sleep(0.5)
                     st.rerun()
                 else:
-                    st.error("⚠️ Por favor ingresa usuario y contraseña")
+                    st.error("Por favor ingresa usuario y contraseña")
 
             # Footer del login
             st.markdown("""
-            <div style='text-align: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e9ecef;'>
-                <p style='color: #6c757d; font-size: 0.85rem; margin: 0;'>
+            <div style='text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #E5E7EB;'>
+                <p class='text-muted' style='margin: 0;'>
                     🔒 Conexión segura | 🛡️ Datos protegidos
                 </p>
-                <p style='color: #adb5bd; font-size: 0.75rem; margin-top: 0.5rem;'>
-                    Desarrollado para SENA Regional Santander
+                <p class='text-muted' style='margin-top: 0.75rem; font-size: 0.75rem; line-height: 1.5;'>
+                    SENA Regional Santander<br>
+                    Desarrollado por Wilson Andrés Arguello<br>
+                    Técnico de Cartera | Abogado 437.480 C.S. Judicatura
                 </p>
             </div>
             """, unsafe_allow_html=True)
@@ -691,61 +620,49 @@ def main():
         # Aplicación principal
         render_header("📚 Asistente Virtual Normativo", "Consulta inteligente de documentación SENA", show_logo=True)
 
-        # Sidebar moderno
+        # Sidebar profesional
         with st.sidebar:
             # Perfil de usuario
             st.markdown(f"""
-            <div style='background: linear-gradient(135deg, #f8fff5 0%, #e8f5e3 100%);
-                        border-radius: 16px; padding: 1.5rem; margin-bottom: 1.5rem;
-                        border-left: 5px solid #39A900; box-shadow: 0 4px 12px rgba(0,0,0,0.05);'>
-                <div style='display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;'>
-                    <div style='width: 50px; height: 50px; border-radius: 50%;
-                                background: linear-gradient(135deg, #39A900, #4dd419);
-                                display: flex; align-items: center; justify-content: center;
-                                font-size: 1.5rem; box-shadow: 0 4px 12px rgba(57, 169, 0, 0.3);'>
-                        👤
+            <div class='sidebar-section'>
+                <div style='display: flex; align-items: center; gap: 1rem;'>
+                    <div class='chat-avatar user' style='width: 40px; height: 40px; font-size: 1rem;'>
+                        {st.session_state.user_profile['usuario'][0].upper()}
                     </div>
-                    <div>
-                        <div style='font-weight: 600; font-size: 1.1rem; color: #2d8500;'>
+                    <div style='flex: 1;'>
+                        <div style='font-weight: 600; color: #1F2937; margin-bottom: 0.25rem;'>
                             {st.session_state.user_profile['usuario']}
                         </div>
-                        <div style='font-size: 0.85rem; color: #6c757d;'>
+                        <div style='font-size: 0.8125rem; color: #6B7280;'>
                             {st.session_state.user_profile['perfil']}
                         </div>
                     </div>
                 </div>
-                <div style='font-size: 0.8rem; color: #6c757d; padding-top: 0.75rem;
-                            border-top: 1px solid rgba(0,0,0,0.05);'>
-                    📍 {st.session_state.user_profile['area']}
+                <div class='stat-divider'></div>
+                <div style='font-size: 0.8125rem; color: #6B7280;'>
+                    Área: {st.session_state.user_profile['area']}
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
             # Estadísticas
-            st.markdown("### 📊 Estadísticas")
+            st.markdown("""<div class='sidebar-section-title'>📊 Estadísticas de Uso</div>""", unsafe_allow_html=True)
+
             st.markdown(f"""
-            <div class='sidebar-stat'>
-                <div style='font-size: 2rem; font-weight: 700; color: #39A900;'>
+            <div class='sidebar-section'>
+                <div class='stat-value' style='color: #39A900;'>
                     {st.session_state.stats['consultas_totales']}
                 </div>
-                <div style='font-size: 0.85rem; color: #6c757d;'>
-                    Consultas realizadas
+                <div class='stat-label'>Consultas realizadas</div>
+                <div class='stat-divider'></div>
+                <div class='stat-value' style='color: #FF6600; font-size: 1.5rem;'>
+                    {st.session_state.stats['tiempo_ahorrado']} min
                 </div>
+                <div class='stat-label'>Tiempo ahorrado</div>
             </div>
             """, unsafe_allow_html=True)
 
-            st.markdown(f"""
-            <div class='sidebar-stat'>
-                <div style='font-size: 2rem; font-weight: 700; color: #FF6600;'>
-                    {st.session_state.stats['tiempo_ahorrado']}
-                </div>
-                <div style='font-size: 0.85rem; color: #6c757d;'>
-                    Minutos ahorrados
-                </div>
-            </div>
-            """, unsafe_allow_html=True)
-
-            st.markdown("---")
+            st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
             # Botones de acción
             if st.button("🔄 Nueva Conversación", use_container_width=True):
@@ -758,10 +675,10 @@ def main():
 
             # Footer del sidebar
             st.markdown("""
-            <div style='margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.05);
-                        text-align: center;'>
-                <p style='color: #adb5bd; font-size: 0.75rem; margin: 0;'>
-                    v1.0.0 | SENA 2025
+            <div style='margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #E5E7EB; text-align: center;'>
+                <p style='color: #9CA3AF; font-size: 0.75rem; margin: 0; line-height: 1.6;'>
+                    Versión 1.0.0 | SENA 2025<br>
+                    <span style='font-size: 0.7rem;'>Wilson Andrés Arguello<br>Abogado 437.480 C.S. Judicatura</span>
                 </p>
             </div>
             """, unsafe_allow_html=True)
@@ -770,51 +687,56 @@ def main():
         if len(st.session_state.messages) == 0:
             st.markdown("""
             <div class="welcome-message">
-                <h3>🤖 ¡Bienvenido al Asistente Virtual SENA!</h3>
-                <p style='color: #6c757d; font-size: 1rem; margin-bottom: 1rem;'>
-                    Soy tu asistente especializado en documentación institucional. Puedo ayudarte con:
-                </p>
+                <h3>🤖 Bienvenido al Asistente Virtual SENA</h3>
+                <p>Soy tu asistente especializado en documentación institucional. Puedo ayudarte con:</p>
                 <ul>
                     <li>📋 <strong>Procedimientos administrativos</strong> - Guías paso a paso</li>
                     <li>📜 <strong>Normativa y circulares</strong> - Documentos oficiales vigentes</li>
                     <li>💼 <strong>Guías técnicas de sistemas</strong> - SIREC, Sofia Plus y más</li>
                     <li>⚖️ <strong>Resoluciones institucionales</strong> - Normativas y políticas</li>
                 </ul>
-                <div style='background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-                            border-radius: 12px; padding: 1rem; margin-top: 1.5rem;
-                            border-left: 4px solid #0ea5e9;'>
-                    <strong style='color: #0369a1;'>💡 Consejo:</strong>
-                    <span style='color: #6c757d;'>
-                        Sé específico en tu consulta para obtener mejores resultados
-                    </span>
+                <div class='info-box'>
+                    <div class='info-box-title'>💡 Consejo profesional</div>
+                    <div class='info-box-content'>
+                        Sé específico en tu consulta para obtener resultados más precisos y relevantes
+                    </div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
         # Renderizar mensajes del chat
-        for message in st.session_state.messages:
+        for idx, message in enumerate(st.session_state.messages):
             role_class = "user" if message["role"] == "user" else "assistant"
-            icon = "👤" if message["role"] == "user" else "🤖"
             avatar_class = "user" if message["role"] == "user" else "assistant"
-            name = st.session_state.user_profile['usuario'] if message["role"] == "user" else "Asistente SENA"
 
-            # Convertir saltos de línea a <br> para mejor renderizado
+            if message["role"] == "user":
+                name = st.session_state.user_profile['usuario']
+                icon = "👤"
+            else:
+                name = "Asistente SENA"
+                icon = "🤖"
+
+            # Convertir saltos de línea a <br>
             content_html = message["content"].replace("\n", "<br>")
+
+            # Timestamp simplificado
+            time_str = "Ahora"
 
             st.markdown(f"""
             <div class="chat-message {role_class}">
-                <strong>
-                    <span class="chat-avatar {avatar_class}">{icon}</span>
-                    {name}
-                </strong>
-                <div style='line-height: 1.6; color: #212529;'>
+                <div class="chat-message-header">
+                    <div class="chat-avatar {avatar_class}">{icon}</div>
+                    <div class="chat-message-name">{name}</div>
+                    <div class="chat-message-time">{time_str}</div>
+                </div>
+                <div class="chat-message-content">
                     {content_html}
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
-        # Input de chat con placeholder personalizado
-        user_input = st.chat_input(f"💬 Escribe tu consulta aquí, {st.session_state.user_profile['usuario']}...")
+        # Input de chat
+        user_input = st.chat_input(f"💬 Escribe tu consulta, {st.session_state.user_profile['usuario']}...")
 
         if user_input:
             st.session_state.messages.append({"role": "user", "content": user_input})
@@ -824,10 +746,10 @@ def main():
                 with st.spinner('🔍 Consultando información...'):
                     response = get_ai_response(user_input, st.session_state.user_profile)
             else:
-                # Modo demo si no hay API key configurada
-                response = f"""⚠️ **MODO DEMOSTRACIÓN ACTIVO**
+                # Modo demo
+                response = f"""⚠️ MODO DEMOSTRACIÓN ACTIVO
 
-📚 **Tu consulta:** {user_input}
+📚 Tu consulta: {user_input}
 
 ---
 
@@ -838,7 +760,7 @@ Esta es una respuesta simulada. Para activar respuestas reales con IA:
 1. 🌐 Visita: https://console.groq.com/
 2. ✅ Crea una cuenta gratuita (sin tarjeta de crédito)
 3. 🔑 Genera tu API key
-4. 📝 Agrégala al archivo `.env` como `GROQ_API_KEY`
+4. 📝 Agrégala al archivo .env como GROQ_API_KEY
 5. 🔄 Reinicia la aplicación
 
 ---
