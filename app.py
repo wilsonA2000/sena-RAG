@@ -63,9 +63,18 @@ def init_session_state():
     if 'stats' not in st.session_state:
         st.session_state.stats = {'consultas_totales': 0, 'tiempo_ahorrado': 0}
     if 'groq_client' not in st.session_state:
-        api_key = os.getenv('GROQ_API_KEY')
+        # Intentar obtener API key de Streamlit secrets (Cloud) o .env (Local)
+        try:
+            api_key = st.secrets.get("GROQ_API_KEY", None)
+        except:
+            api_key = os.getenv('GROQ_API_KEY')
+
         if api_key and api_key != 'tu_api_key_aqui':
-            st.session_state.groq_client = Groq(api_key=api_key)
+            try:
+                st.session_state.groq_client = Groq(api_key=api_key)
+            except Exception as e:
+                st.error(f"Error al inicializar Groq: {str(e)}")
+                st.session_state.groq_client = None
         else:
             st.session_state.groq_client = None
 
