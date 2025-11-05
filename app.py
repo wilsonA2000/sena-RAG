@@ -554,7 +554,7 @@ def main():
 
     if not st.session_state.authenticated:
         # Página de login profesional
-        render_header("🎓 Asistente Virtual Normativo SENA", "Sistema de Consulta Documental Inteligente", show_logo=True)
+        render_header("Asistente Virtual Normativo SENA", "Sistema de Consulta Documental Inteligente", show_logo=True)
 
         # Espaciado
         st.markdown("<div style='height: 2rem;'></div>", unsafe_allow_html=True)
@@ -564,7 +564,7 @@ def main():
             st.markdown("""
             <div class="login-container">
                 <div class="login-header">
-                    <div class="login-title">🔐 Autenticación Institucional</div>
+                    <div class="login-title">Autenticación Institucional</div>
                     <div class="login-subtitle">Ingresa con tus credenciales del SENA</div>
                 </div>
                 <div style="text-align: center;">
@@ -575,10 +575,10 @@ def main():
 
             st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
-            usuario = st.text_input("👤 Usuario", placeholder="wilson.perez", key="login_user", label_visibility="visible")
-            password = st.text_input("🔑 Contraseña", type="password", placeholder="••••••••", key="login_pass", label_visibility="visible")
+            usuario = st.text_input("Usuario", placeholder="wilson.perez", key="login_user", label_visibility="visible")
+            password = st.text_input("Contraseña", type="password", placeholder="••••••••", key="login_pass", label_visibility="visible")
             perfil = st.selectbox(
-                "👔 Perfil",
+                "Perfil",
                 ["Técnico de Cartera", "Coordinador Académico", "Instructor", "Subdirector", "Administrativo"],
                 key="login_profile",
                 label_visibility="visible"
@@ -586,7 +586,7 @@ def main():
 
             st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
 
-            if st.button("🚀 Ingresar al Sistema", type="primary", use_container_width=True):
+            if st.button("Ingresar al Sistema", type="primary", use_container_width=True):
                 if usuario and password:
                     with st.spinner('Autenticando...'):
                         time.sleep(0.8)
@@ -607,7 +607,7 @@ def main():
             st.markdown("""
             <div style='text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #E5E7EB;'>
                 <p class='text-muted' style='margin: 0;'>
-                    🔒 Conexión segura | 🛡️ Datos protegidos
+                    Conexión segura | Datos protegidos
                 </p>
                 <p class='text-muted' style='margin-top: 0.75rem; font-size: 0.75rem; line-height: 1.5;'>
                     SENA Regional Santander<br>
@@ -618,7 +618,7 @@ def main():
             """, unsafe_allow_html=True)
     else:
         # Aplicación principal
-        render_header("📚 Asistente Virtual Normativo", "Consulta inteligente de documentación SENA", show_logo=True)
+        render_header("Asistente Virtual Normativo", "Consulta inteligente de documentación SENA", show_logo=True)
 
         # Sidebar profesional
         with st.sidebar:
@@ -646,7 +646,7 @@ def main():
             """, unsafe_allow_html=True)
 
             # Estadísticas
-            st.markdown("""<div class='sidebar-section-title'>📊 Estadísticas de Uso</div>""", unsafe_allow_html=True)
+            st.markdown("""<div class='sidebar-section-title'>Estadísticas de Uso</div>""", unsafe_allow_html=True)
 
             st.markdown(f"""
             <div class='sidebar-section'>
@@ -665,11 +665,11 @@ def main():
             st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
 
             # Botones de acción
-            if st.button("🔄 Nueva Conversación", use_container_width=True):
+            if st.button("Nueva Conversación", use_container_width=True):
                 st.session_state.messages = []
                 st.rerun()
 
-            if st.button("🚪 Cerrar Sesión", use_container_width=True):
+            if st.button("Cerrar Sesión", use_container_width=True):
                 st.session_state.authenticated = False
                 st.rerun()
 
@@ -687,16 +687,16 @@ def main():
         if len(st.session_state.messages) == 0:
             st.markdown("""
             <div class="welcome-message">
-                <h3>🤖 Bienvenido al Asistente Virtual SENA</h3>
+                <h3>Bienvenido al Asistente Virtual SENA</h3>
                 <p>Soy tu asistente especializado en documentación institucional. Puedo ayudarte con:</p>
                 <ul>
-                    <li>📋 <strong>Procedimientos administrativos</strong> - Guías paso a paso</li>
-                    <li>📜 <strong>Normativa y circulares</strong> - Documentos oficiales vigentes</li>
-                    <li>💼 <strong>Guías técnicas de sistemas</strong> - SIREC, Sofia Plus y más</li>
-                    <li>⚖️ <strong>Resoluciones institucionales</strong> - Normativas y políticas</li>
+                    <li><strong>Procedimientos administrativos</strong> - Guías paso a paso</li>
+                    <li><strong>Normativa y circulares</strong> - Documentos oficiales vigentes</li>
+                    <li><strong>Guías técnicas de sistemas</strong> - SIREC, Sofia Plus y más</li>
+                    <li><strong>Resoluciones institucionales</strong> - Normativas y políticas</li>
                 </ul>
                 <div class='info-box'>
-                    <div class='info-box-title'>💡 Consejo profesional</div>
+                    <div class='info-box-title'>Consejo profesional</div>
                     <div class='info-box-content'>
                         Sé específico en tu consulta para obtener resultados más precisos y relevantes
                     </div>
@@ -711,10 +711,10 @@ def main():
 
             if message["role"] == "user":
                 name = st.session_state.user_profile['usuario']
-                icon = "👤"
+                initials = name[0].upper()
             else:
                 name = "Asistente SENA"
-                icon = "🤖"
+                initials = "AS"
 
             # Convertir saltos de línea a <br>
             content_html = message["content"].replace("\n", "<br>")
@@ -725,7 +725,7 @@ def main():
             st.markdown(f"""
             <div class="chat-message {role_class}">
                 <div class="chat-message-header">
-                    <div class="chat-avatar {avatar_class}">{icon}</div>
+                    <div class="chat-avatar {avatar_class}">{initials}</div>
                     <div class="chat-message-name">{name}</div>
                     <div class="chat-message-time">{time_str}</div>
                 </div>
@@ -736,20 +736,20 @@ def main():
             """, unsafe_allow_html=True)
 
         # Input de chat
-        user_input = st.chat_input(f"💬 Escribe tu consulta, {st.session_state.user_profile['usuario']}...")
+        user_input = st.chat_input(f"Escribe tu consulta, {st.session_state.user_profile['usuario']}...")
 
         if user_input:
             st.session_state.messages.append({"role": "user", "content": user_input})
 
             # Obtener respuesta de IA o usar modo demo
             if st.session_state.groq_client:
-                with st.spinner('🔍 Consultando información...'):
+                with st.spinner('Consultando información...'):
                     response = get_ai_response(user_input, st.session_state.user_profile)
             else:
                 # Modo demo
-                response = f"""⚠️ MODO DEMOSTRACIÓN ACTIVO
+                response = f"""MODO DEMOSTRACIÓN ACTIVO
 
-📚 Tu consulta: {user_input}
+Tu consulta: {user_input}
 
 ---
 
@@ -757,11 +757,11 @@ Esta es una respuesta simulada. Para activar respuestas reales con IA:
 
 **Pasos para configurar Groq API (GRATIS):**
 
-1. 🌐 Visita: https://console.groq.com/
-2. ✅ Crea una cuenta gratuita (sin tarjeta de crédito)
-3. 🔑 Genera tu API key
-4. 📝 Agrégala al archivo .env como GROQ_API_KEY
-5. 🔄 Reinicia la aplicación
+1. Visita: https://console.groq.com/
+2. Crea una cuenta gratuita (sin tarjeta de crédito)
+3. Genera tu API key
+4. Agrégala al archivo .env como GROQ_API_KEY
+5. Reinicia la aplicación
 
 ---
 
@@ -770,7 +770,7 @@ Esta es una respuesta simulada. Para activar respuestas reales con IA:
 - Circular 2024-003 Gestión Documental
 - Resolución 0123 de 2024
 
-💡 Una vez configurado, obtendrás respuestas reales con IA potenciada por Llama 3.3 70B."""
+Una vez configurado, obtendrás respuestas reales con IA potenciada por Llama 3.3 70B."""
 
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.session_state.stats['consultas_totales'] += 1
