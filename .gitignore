@@ -1,0 +1,22 @@
+# Archivos sensibles - NO subir a GitHub
+.env
+
+# Entornos virtuales
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
